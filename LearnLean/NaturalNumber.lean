@@ -34,4 +34,4 @@ example : MyNat.add .one .one = .two := by
     change MyNat.succ (MyNat.add .one .zero) = .two
     change MyNat.succ .one = .two
     change MyNat.succ .one = MyNat.succ .one
-    exact Eq.refl (MyNat.succ .one)
+    trivial
