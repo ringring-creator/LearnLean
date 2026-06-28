@@ -35,11 +35,12 @@ noncomputable def inverse (f : X → Y) (hf : Surjective f) : Y → X := by
   exact x.val
 
 theorem double_negation_of_contra_equiv (P : Prop)
- (contra_equiv : ∀ (P Q : Prop), (¬ P → ¬ Q) ↔ (Q → P)) : ¬¬ P → ¬ P:= by
-  have := contra_equiv P True --  (¬P → ¬True) ↔ (True → P) ⊢ ¬¬P → ¬P
-  rw [show ¬ True ↔ False from by simp] at this
-  rw [show True → P ↔ P from by simp] at this
-  rw [show (¬ P → False) ↔ ¬¬ P from by rfl] at this
-  rw [this]
-  simp
+  (contra_equiv : ∀ (P Q : Prop), (¬ P → ¬ Q) ↔ (Q → P)) : ¬¬ P → P := by
+  have h := contra_equiv P True
+  rw [show ¬ True ↔ False from by simp] at h
+  rw [show True → P ↔ P from by simp] at h
+
+  intro hnnP
+  exact h.mp hnnP
+
 #print axioms double_negation_of_contra_equiv
