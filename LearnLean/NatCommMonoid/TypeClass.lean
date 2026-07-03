@@ -27,10 +27,8 @@ instance : Add MyNat where
 
 def MyNat.one := MyNat.succ MyNat.zero
 
-#check 1 + 1
-#check MyNat.one + MyNat.one
-#eval 0 + 0 -- MyNat.zero
-#eval MyNat.one + MyNat.one -- MyNat.succ (MyNat.succ (MyNat.zero))
+#eval MyNat.zero + 0 -- MyNat.zero
+#eval MyNat.one + 1 -- MyNat.succ (MyNat.succ (MyNat.zero))
 
 def MyNat.toNat (n : MyNat) : Nat :=
     match n with
@@ -40,5 +38,5 @@ def MyNat.toNat (n : MyNat) : Nat :=
 instance : Repr MyNat where
     reprPrec n _ := repr n.toNat
 
-    #eval 0 + 0
-    #eval 1 + 1
+#eval 0 + 0
+#eval 1 + 1
