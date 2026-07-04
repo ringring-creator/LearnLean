@@ -48,3 +48,16 @@ example (m n : MyNat) : .succ m + n = .succ (m + n) := by
     rfl
   case succ n' ih =>
     simp? [ih]
+
+example (m n : MyNat) : .succ m + n = .succ (m + n) := by
+  induction n with
+  | zero => rfl
+  | succ n' ih => calc
+    _ = (m.succ + n').succ := by rw [MyNat.add_succ]
+    _ = (m + n').succ.succ := by rw [MyNat.succ_add]
+    _ = (m + n'.succ).succ := by rw [MyNat.add_succ]
+
+example (n : MyNat) : 2 + n = n + 2 := by
+  induction n with
+  | zero => rfl
+  | succ n' ih => simp [ih]
