@@ -72,3 +72,42 @@ example : l + m = l + n → m = n := by
     MyNat.add_comm n m,
     MyNat.self_eq_add_right,
   ]
+
+theorem MyNat.eq_zero_of_add_eq_zero : m + n = 0 → m = 0 ∧ n = 0 := by
+  intro h
+  induction n with
+  | zero => -- h : m + 0 = 0 ⊢ m = 0 ∧ 0 = 0
+    simp_all
+  | succ n ih =>
+    -- ih : m + n = 0 → m = 0 ∧ n = 0
+    -- h : m + (n + 1) = 0
+    -- ⊢ m = 0 ∧ n + 1 = 0
+    exfalso -- ih : m + n = 0 → m = 0 ∧ n = 0 h : m + (n + 1) = 0 ⊢ False
+    rw [show m + (n + 1) = m + n + 1 from by ac_rfl] at h
+    injection h
+
+theorem MyNat.add_eq_zero_of_eq_zero : m = 0 ∧ n = 0 → m + n = 0 := by
+  intro h
+  simp_all
+
+@[simp]
+theorem MyNat.add_eq_zero_iff_eq_zero : m + n = 0 ↔ m = 0 ∧ n = 0 := by
+  exact ⟨ MyNat.eq_zero_of_add_eq_zero, MyNat.add_eq_zero_of_eq_zero ⟩
+
+@[simp]
+theorem MyNat.mul_eq_zero (m n : MyNat) : m * n = 0 ↔ m = 0 ∨ n = 0 := by
+  constructor <;> intro h
+  case mpr =>
+    cases h <;> simp_all
+  case mp =>
+    induction n with
+    | zero =>
+      simp_all
+    | succ n _ =>
+    -- a✝ : m * n = 0 → m = 0 ∨ n = 0
+    -- h : m * (n + 1) = 0
+    -- ⊢ m = 0 ∨ n + 1 = 0
+      have : m * n + m = 0 := calc
+        _ = m * (n + 1) := by distrib
+        _ = 0 := by rw [h]
+      simp_all
