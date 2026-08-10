@@ -71,3 +71,49 @@ theorem MyNat.le_add_one_left (n : MyNat) : n ≤ 1 + n := calc
   _ = 1 + n := by ac_rfl
 
 attribute [simp] MyNat.le_refl MyNat.le_add_one_right MyNat.le_add_one_left
+
+-- Rewriting the order using addition
+theorem MyNat.le.dest (h : n ≤ m) : ∃ k, n + k = m := by
+  induction h with
+  | refl => exists 0
+  | @step l h ih =>
+    -- h : n ≤ l
+    -- ih : ∃ k, n + k = l
+    -- ⊢ ∃ k, n + k = l + 1
+    obtain ⟨ k, ih ⟩ := ih
+    exists k + 1
+    rw [← ih]
+    -- h : n ≤ l
+    -- k : MyNat
+    -- ih : n + k = l
+    -- ⊢ n + (k + 1) = n + k + 1
+    ac_rfl
+
+theorem MyNat.le_add_right (n m : MyNat) : n ≤ n + m := by
+  induction m with
+  | zero => rfl
+  | succ k ih =>
+    -- ih : n ≤ n + k
+    -- ⊢ n ≤ n + (k + 1)
+    rw [show n + (k + 1) = (n + k) + 1 from by ac_rfl]
+    exact MyNat.le_step ih
+
+theorem MyNat.le.intro (h : n + k = m) : n ≤ m := by
+  -- h : n + k = m ⊢ n ≤ n + k
+  rw [← h]
+  induction k with
+  | zero => rfl
+  | succ k ih =>
+    -- ih : n + k = m → n ≤ n + k
+    -- h : n + (k + 1) = m
+    -- ⊢ n ≤ n + (k + 1)
+    apply MyNat.le_add_right
+
+theorem MyNat.le_iff_add : n ≤ m ↔ ∃ k, n + k = m := by
+  constructor <;> intro h
+  · exact MyNat.le.dest h
+  · obtain ⟨k, hk⟩ := h
+    exact MyNat.le.intro hk
+
+example : 1 ≤ 4 := by
+    exact MyNat.le_iff_add.mpr ⟨3, rfl⟩
