@@ -38,7 +38,7 @@ example (m n : MyNat) (h : m < n) : m + 1 ≤ n := by
   notation_simp at *
   assumption
 
-example (m n : MyNat) : m < n := by
+-- example (m n : MyNat) : m < n := by
   -- `simp` made no progress
   -- simp
 
@@ -54,8 +54,8 @@ macro_rules
 
 end
 
-example (m n : MyNat) : m < n := by
-  notation_simp?
+-- example (m n : MyNat) : m < n := by
+  -- notation_simp?
   -- Try this:
   -- [apply] simp only [MyNat.lt_def]
 
