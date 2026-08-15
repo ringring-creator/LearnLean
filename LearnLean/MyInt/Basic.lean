@@ -55,7 +55,10 @@ abbrev MyInt := Quotient PreInt.sr
   let a : PreInt := (1, 3)
   (Quotient.mk _ a)
 
-notation:arg "⟦" a "⟧" => Quotient.mk _ a
+namespace PreInt
+scoped notation "⟦" a "⟧" => Quotient.mk PreInt.sr a
+end PreInt
+open scoped PreInt
 
 #check (⟦(1, 3)⟧ : MyInt)
 
