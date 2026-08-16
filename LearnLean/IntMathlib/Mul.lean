@@ -1,5 +1,6 @@
 import Mathlib
 import LearnLean.IntMathlib.Add
+import LearnLean.NatCommMonoid.Induction
 
 instance : Zero MyNat where
   zero := 0
@@ -106,6 +107,13 @@ theorem MyInt.right_distrib (m n k : MyInt) : (m + n) * k = m * k + n * k := by
   unfold_int₃
   ring
 
+theorem MyInt.ofNat_succ (n : Nat) : MyInt.ofNat (n + 1) = MyInt.ofNat n + 1 := by
+  apply Quotient.sound
+  notation_simp
+  simp [MyInt.ofNat, MyNat.ofNat]
+  change (MyNat.ofNat n).succ = MyNat.ofNat n + MyNat.succ 0
+  exact (MyNat.add_succ (MyNat.ofNat n) 0).symm
+
 instance : CommRing MyInt where
   left_distrib := MyInt.left_distrib
   right_distrib := MyInt.right_distrib
@@ -117,6 +125,9 @@ instance : CommRing MyInt where
   mul_comm := MyInt.mul_comm
   zsmul := zsmulRec
   neg_add_cancel := MyInt.neg_add_cancel
+  natCast := MyInt.ofNat
+  natCast_zero := rfl
+  natCast_succ := MyInt.ofNat_succ
 
 example (m n : MyInt) : (m - n) * (m + n) = m * m - n * n := by
   ring
